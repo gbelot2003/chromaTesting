@@ -1,42 +1,27 @@
 import os
 import requests
+from openai import OpenAI
 from dotenv import load_dotenv
+
 load_dotenv(override=True)
 
-def get_deepseek_response(user_message):
-    # Aquí deberías implementar la lógica para comunicarte con la API de DeepSeek
-    # Por ejemplo, si la API de DeepSeek tiene un endpoint para enviar mensajes:
-    url = "https://api.deepseek.com/chat/completions"
-    bearer = f"Bearer {os.getenv('DEEPSEEK_API_KEY')}"
-    headers = {
-        'Authorization': bearer,
-        'Content-Type': 'application/json'
-    }
-   
-    data = {
-        "model": "deepseek-chat",
-        "messages": [
-            {
-                "role": "user",
-                "content": user_message
-            }
-        ]
-    }
-    response = requests.post(url, headers=headers, json=data)
-   
-    if response.status_code != 200:
-        return f"Error: {response.status_code} - {response.text}"
-    
-    try:
-        response_json = response.json()
-        print("Full response:", response_json)  # Imprime la respuesta completa
-        if 'choices' in response_json and len(response_json['choices']) > 0:
-            assistant_message = response_json['choices'][0]['message']['content']
-            return assistant_message
-        else:
-            return "No response from DeepSeek"
 
-    except requests.exceptions.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-        print(f"Response content: {response.text}")
-        return "Error decoding JSON"
+def get_deepseek_response(user_message):
+    client = OpenAI(
+        api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com"
+    ) 
+    
+    response = client.chat.completions.create(
+        model='deepseek-chat',  # Specify the model
+        messages=[
+            {
+                "role": "user", "content": user_message
+            }
+        ],
+        max_tokens=150,  # Adjust token count as needed
+        temperature=0.1  # Adjust temperature for variability
+    )
+    
+    assistant_message = response.choices[0].message.content  # Access the generated message content
+    print(f"ChatGTP: {response.choices[0].message.content}")
+    return assistant_message
