@@ -1,5 +1,7 @@
 import os
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 def get_deepseek_response(user_message):
     # Aquí deberías implementar la lógica para comunicarte con la API de DeepSeek
@@ -7,7 +9,7 @@ def get_deepseek_response(user_message):
     url = "https://api.deepseek.com/chat/completions"
     bearer = f"Bearer {os.getenv('DEEPSEEK_API_KEY')}"
     headers = {
-        'Authorization': "Bearer sk-526da409ff8e462f8d0bbed9d9e87bda",
+        'Authorization': bearer,
         'Content-Type': 'application/json'
     }
     data = {
