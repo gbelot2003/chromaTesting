@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 from flask_socketio import emit
 from ..services.deepseek_service import get_deepseek_response
 from ..utils.websocket_utils import send_message
+from .. import socketio  # Importar socketio aquí
 
 bp = Blueprint('chat', __name__)
 
@@ -11,7 +12,7 @@ def index():
 
 @bp.route('/chat')
 def chat():
-    return render_template('chat.html')
+    return render_template('templates/index.html')
 
 @socketio.on('send_message')
 def handle_message(data):
