@@ -1,7 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True)
 
 def get_deepseek_response(user_message):
     # Aquí deberías implementar la lógica para comunicarte con la API de DeepSeek
@@ -12,6 +12,7 @@ def get_deepseek_response(user_message):
         'Authorization': bearer,
         'Content-Type': 'application/json'
     }
+   
     data = {
         "model": "deepseek-chat",
         "messages": [
@@ -22,6 +23,7 @@ def get_deepseek_response(user_message):
         ]
     }
     response = requests.post(url, headers=headers, json=data)
+   
     if response.status_code != 200:
         return f"Error: {response.status_code} - {response.text}"
     
